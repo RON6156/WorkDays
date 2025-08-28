@@ -1,0 +1,264 @@
+    :root {
+      --primary: #1565c0;
+      --primary-dark: #0d47a1;
+      --bg: #f5f9ff;
+      --text: #1a1a1a;
+      --accent: #e3f2fd;
+      --shadow: rgba(0, 80, 200, 0.15);
+      --border-radius: 0.75rem;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --sidebar-width: 260px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
+      font-family: var(--font-family);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    header {
+      height: 56px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    header .hamburger {
+      font-size: 1.8rem;
+      cursor: pointer;
+      user-select: none;
+      margin-right: 1rem;
+    }
+    header .title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      flex-grow: 1;
+    }
+    header button.logout {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--border-radius);
+      transition: background-color 0.3s ease;
+    }
+    header button.logout:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Sidebar */
+nav.sidebar {
+  position: absolute;
+  top: 56px;
+  left: 1rem;
+  width: 240px;
+  background: white;
+  border: 1px solid var(--accent);
+  box-shadow: 0 4px 12px var(--shadow);
+  border-radius: var(--border-radius);
+  padding: 1rem 1rem 0.5rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 100;
+}
+
+nav.sidebar.open {
+  display: flex;
+}
+
+    nav.sidebar.open {
+      left: 0;
+    }
+    nav.sidebar h2 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.25rem;
+      font-weight: 600;
+    }
+    nav.sidebar button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+      margin-top: auto;
+    }
+    nav.sidebar button:hover {
+      background: var(--primary-dark);
+    }
+    nav.sidebar .tab-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    nav.sidebar .tab-buttons button {
+      flex: 1;
+      background: var(--accent);
+      color: var(--primary-dark);
+      border: 1px solid var(--primary);
+      font-weight: 600;
+      padding: 0.5rem;
+      border-radius: var(--border-radius);
+    }
+    nav.sidebar .tab-buttons button.active {
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+    nav.sidebar section {
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    nav.sidebar label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: block;
+      color: var(--primary-dark);
+    }
+    nav.sidebar input, nav.sidebar select, nav.sidebar button.save-btn {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 1rem;
+      border-radius: var(--border-radius);
+      border: 1.5px solid #ccc;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+    nav.sidebar input:focus, nav.sidebar select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 5px var(--primary);   }
+    nav.sidebar button.save-btn {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      margin-top: 0;
+      padding: 0.75rem 1rem;
+      transition: background-color 0.3s ease;
+    }
+    nav.sidebar button.save-btn:hover {
+      background: var(--primary-dark);
+    }
+    nav.sidebar pre {
+      background: var(--accent);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      white-space: pre-wrap;
+      font-size: 1rem;
+      color: var(--text);
+      min-height: 150px;
+      user-select: text;
+      overflow-x: auto;
+    }
+
+    /* Main content */
+    main.content {
+      margin-top: 56px;
+      margin-left: 0;
+      padding: 2rem 1.5rem;
+      transition: margin-left 0.3s ease;
+      max-width: 600px;
+      width: 100%;
+    }
+    main.content.sidebar-open {
+      margin-left: var(--sidebar-width);
+    }
+    main.content h2 {
+      color: var(--primary);
+      margin-top: 0;
+    }
+    main.content section {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 12px var(--shadow);
+      margin-bottom: 2rem;
+    }
+    main.content label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+    main.content input, main.content select, main.content button {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 1rem;
+      border-radius: var(--border-radius);
+      border: 1.5px solid #ccc;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+    main.content input:focus, main.content select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 5px var(--primary);
+    }
+    main.content button {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      padding: 0.75rem 1rem;
+      transition: background-color 0.3s ease;
+    }
+    main.content button:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Scroll to top */
+    .fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 26px;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      z-index: 20;
+    }
+    .fab:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      nav.sidebar {
+        width: 220px;
+      }
+      main.content.sidebar-open {
+        margin-left: 220px;
+      }
+    }
