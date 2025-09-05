@@ -3,115 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WorkDays</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2684383807209830"
-     crossorigin="anonymous"></script>
-  <!-- SweetAlert2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <title>Work Days Tracker - Login</title>
   <style>
     :root {
       --primary: #1565c0;
       --primary-dark: #0d47a1;
       --bg: #f5f9ff;
-      --text: #333;
+      --text: #1a1a1a;
+      --accent: #e3f2fd;
+      --border-radius: 0.75rem;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    * { box-sizing: border-box; font-family: 'Noto Sans', sans-serif; }
-
-    body {
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
       background: var(--bg);
-      margin: 0;
-      padding: 0;
+      font-family: var(--font-family);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      color: var(--text);
     }
-
-    main.login-container {
+    .login-container {
       background: white;
-      padding: 25px 20px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      width: 95%;
+      padding: 2.5rem 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 20px rgba(0,80,200,0.15);
+      width: 100%;
       max-width: 400px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 1rem;
     }
-
-    header {
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
+    h1 {
+      margin: 0 0 1rem 0;
       color: var(--primary-dark);
-      margin-bottom: 50px;
+      text-align: center;
     }
-
-    input[type="email"], input[type="password"] {
+    input, button {
+      font-family: var(--font-family);
+      font-size: 1rem;
+      border-radius: var(--border-radius);
+      border: 1.5px solid #ccc;
+      padding: 0.75rem 1rem;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
       width: 100%;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      font-size: 1em;
-      transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 8px rgba(21, 101, 192, 0.3);
-      outline: none;
+      box-shadow: 0 0 5px var(--primary);
     }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
     button {
-      flex: 1 1 48%;
-      padding: 14px;
       background: var(--primary);
-      border: none;
-      border-radius: 20px;
       color: white;
-      font-size: 1.1em;
-      font-weight: bold;
+      font-weight: 700;
+      border: none;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      transition: background-color 0.3s ease;
+      margin-top: 0.5rem;
     }
-
     button:hover {
       background: var(--primary-dark);
-      transform: translateY(-2px);
     }
-
-    #admin-btn {
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .info-msg {
+      background: #d1e7ff;
+      border: 1px solid #7fb9ff;
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+      text-align: center;
       display: none;
-      margin-top: 10px;
-      background: #263238;
+    }
+    
+        #admin-btn {
+      display: none; /* Hidden by default */
+      margin-top: 1rem;
+      background: #b71c1c;
       color: white;
       border: none;
-      padding: 10px 16px;
-      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
       cursor: pointer;
       font-weight: bold;
-      width: 100%;
-    }
-
-    @media (max-width: 400px) {
-      main.login-container { padding: 20px 15px; }
-      input[type="email"], input[type="password"], button { padding: 12px; font-size: 1em; }
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <main class="login-container" role="main" aria-label="Login or Sign Up">
-    <header>WorkDays</header>
+
+    <h1>Work Days Tracker</h1>
+
     <input type="email" id="email" placeholder="Enter your email" autocomplete="username" required />
     <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required />
     
@@ -119,145 +109,85 @@
       <button id="btn-login" onclick="login()">Login</button>
       <button id="btn-signup" onclick="signup()">Sign Up</button>
     </div>
+
+    <div id="auth-msg" class="info-msg"></div>
   </main>
   
-  <!-- Hidden admin login button -->
-  <button id="admin-btn" onclick="goToAdminLogin()">Admins</button>
+      <!-- Hidden admin login button -->
+    <button id="admin-btn" onclick="goToAdminLogin()">Admins</button>
 
-  <!-- SweetAlert2 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    let clickCount = 0;
-    let clickTimer;
+                let clickCount = 0;
+            let clickTimer;
 
-    document.body.addEventListener("click", () => {
-        clickCount++;
-        if (clickCount === 5) {
-            document.getElementById("admin-btn").style.display = "inline-block";
-            // Admin reveal as popup
-            Swal.fire({
-              icon: 'info',
-              title: 'Admin login revealed!',
-              timer: 2000,
-              showConfirmButton: false
+            // Reveal admin button if user clicks 5 times quickly on the body
+            document.body.addEventListener("click", () => {
+                clickCount++;
+                if (clickCount === 5) {
+                    document.getElementById("admin-btn").style.display =
+                        "inline-block";
+                    alert("Admin login revealed!");
+                    clickCount = 0;
+                    clearTimeout(clickTimer);
+                }
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => (clickCount = 0), 1000);
             });
-            clickCount = 0;
-            clearTimeout(clickTimer);
-        }
-        clearTimeout(clickTimer);
-        clickTimer = setTimeout(() => (clickCount = 0), 1000);
-    });
 
-    function goToAdminLogin() {
-        window.location.href = "admin-login.html";
+            function goToAdminLogin() {
+                window.location.href = "/pages/adm/admin-login.html";
+            }
+    
+    function showMessage(msg) {
+      const el = document.getElementById('auth-msg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 4000);
     }
 
-    // Toast function
-    function showToast(msg, type = 'success') {
-      let bg;
-      switch(type){
-        case 'success': bg = '#4caf50'; break; // green
-        case 'error': bg = '#c62828'; break;  // red
-        default: bg = '#1565c0';
-      }
-
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: type,
-        title: msg,
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        background: bg,
-        color: '#ffffff',
-        iconColor: '#ffffff',
-        timerProgressBarColor: '#ffd700'
-      });
-    }
-
-    // Store users as array of objects instead of single object
     function getUsers() {
-      return JSON.parse(localStorage.getItem('accounts') || '[]');
+      return JSON.parse(localStorage.getItem('users') || '{}');
     }
 
     function saveUsers(users) {
-      localStorage.setItem('accounts', JSON.stringify(users));
-    }
-
-    function clearFields() {
-      document.getElementById('email').value = '';
-      document.getElementById('password').value = '';
-    }
-
-    function isValidEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
+      localStorage.setItem('users', JSON.stringify(users));
     }
 
     function login() {
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value.trim();
       if (!email || !password) {
-        showToast('Please enter email and password.', 'error');
-        return;
-      }
-
-      if (!isValidEmail(email)) {
-        showToast('Please enter a valid email address.', 'error');
+        showMessage('Please enter email and password.');
         return;
       }
 
       const users = getUsers();
-      const user = users.find(u => u.email === email && u.password === password);
-
-      if (user) {
+      if (users[email] && users[email].password === password) {
+        // Save current user email in sessionStorage and redirect to main.html
         sessionStorage.setItem('currentUserEmail', email);
-        showToast('Login successful!', 'success');
-        clearFields();
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        window.location.href = '/pages/main.html';
       } else {
-        showToast('Invalid email or password.', 'error');
+        showMessage('Invalid email or password.');
       }
     }
 
     function signup() {
       const email = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value.trim();
-
       if (!email || !password) {
-        showToast('Please enter email and password.', 'error');
-        return;
-      }
-
-      if (!isValidEmail(email)) {
-        showToast('Please enter a valid email address.', 'error');
+        showMessage('Please enter email and password.');
         return;
       }
 
       let users = getUsers();
-      if (users.find(u => u.email === email)) {
-        showToast('Email already registered. Please login.', 'error');
+      if (users[email]) {
+        showMessage('Email already registered. Please login.');
         return;
       }
-
-      users.push({ email, password, role: "user", shifts: [], settings: {} });
+      users[email] = { password, shifts: [], settings: {} };
       saveUsers(users);
-      showToast('Signup successful! You can now log in.', 'success');
-      clearFields();
+      showMessage('Signup successful! You can now log in.');
     }
   </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2684383807209830"
-     crossorigin="anonymous"></script>
-<!-- Responsive Horizontal -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2684383807209830"
-     data-ad-slot="9576231710"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 </body>
 </html>
