@@ -1,188 +1,469 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Work Days Tracker - Dashboard</title>
-  <style>
-    :root {
-      --primary: #1565c0;
-      --primary-dark: #0d47a1;
-      --bg: #f5f9ff;
-      --text: #1a1a1a;
-      --accent: #e3f2fd;
-      --shadow: rgba(0, 80, 200, 0.15);
-      --border-radius: 0.75rem;
-      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body, html {
-      margin: 0; padding: 0;
-      font-family: var(--font-family);
-      background: var(--bg);
-      color: var(--text);
-    }
-    header {
-      height: 56px;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      padding: 0 1rem;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    header .hamburger {
-      font-size: 1.8rem;
-      cursor: pointer;
-      margin-right: 1rem;
-    }
-    header .title { flex-grow: 1; font-weight: 700; font-size: 1.3rem; }
-    header button.logout {
-      background: transparent; border: none; color: white; font-weight: 700;
-      cursor: pointer; padding: 0.25rem 0.75rem; border-radius: var(--border-radius);
-    }
-    nav.sidebar {
-      position: absolute; top: 56px; left: 1rem;
-      width: 200px; background: white;
-      border: 1px solid var(--accent);
-      box-shadow: 0 4px 12px var(--shadow);
-      border-radius: var(--border-radius);
-      padding: 1rem;
-      display: none; flex-direction: column; gap: 0.75rem;
-      z-index: 100;
-    }
-    nav.sidebar.open { display: flex; }
-    nav.sidebar button {
-      background: var(--primary); color: white; border: none;
-      padding: 0.6rem 1rem; border-radius: var(--border-radius);
-      cursor: pointer; font-weight: 700;
-    }
-    main.content {
-      margin-top: 70px; padding: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;
-    }
-    main.content section {
-      background: white; padding: 1.5rem; border-radius: var(--border-radius);
-      box-shadow: 0 0 12px var(--shadow); margin-bottom: 2rem;
-    }
-    main.content label { display: block; font-weight: 600; margin-top: 0.5rem; }
-    main.content input, main.content select, main.content button {
-      width: 100%; padding: 0.75rem; margin-top: 0.25rem; margin-bottom: 1rem;
-      border-radius: var(--border-radius); border: 1px solid #ccc;
-    }
-    main.content button { background: var(--primary); color: white; font-weight: 700; border: none; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 0.5rem; border-bottom: 1px solid #ccc; }
-    th { background: var(--primary); color: white; text-align: left; }
-    .fab {
-      position: fixed; bottom: 20px; right: 20px;
-      background: var(--primary); color: white;
-      border-radius: 50%; width: 50px; height: 50px;
-      font-size: 26px; border: none; cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorkDays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2684383807209830"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #1565c0;
+            --primary-dark: #0d47a1;
+            --bg: #f5f9ff;
+            --text: #333;
+        }
+
+        * { box-sizing: border-box; font-family: "Noto Sans", sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 0; }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #eee;
+            padding: 10px;
+            gap: 10px;
+            border-radius: 20px;
+            margin: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 20px;
+            transition: background 0.3s, color 0.3s;
+            text-align: center;
+            flex: 1 1 auto;
+            min-width: 100px;
+        }
+
+        nav a:hover { background: var(--primary); color: white; }
+        nav a.active { background: var(--primary-dark); color: white; }
+
+        main {
+            max-width: 480px;
+            width: 95%;
+            margin: 20px auto;
+            background: white;
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 { text-align: center; color: var(--primary-dark); margin-bottom: 25px; }
+
+        label { display: block; margin-top: 15px; color: var(--text); font-weight: bold; font-size: 1em; }
+
+        input[type="date"], input[type="number"], input[type="month"], select {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(21,101,192,0.3);
+            outline: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 14px;
+            background: var(--primary);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        section { margin-bottom: 25px; }
+
+        .shift-group {
+            background: #e3f2fd;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .shift-group:hover { background: #bbdefb; }
+
+        #shiftList { padding-right: 5px; }
+
+        .shift-list {
+            margin-left: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .shift-list.show { max-height: 500px; }
+
+        .shift-item {
+            background: #fafafa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shift-item span { flex: 1; }
+
+        .shift-item button {
+            margin-left: 5px;
+            padding: 6px 12px;
+            font-size: 0.9em;
+            border-radius: 12px;
+            border: none;
+            background: #607d8b;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .shift-item button:hover { background: #ccc; color: #000; }
+
+        .shift-item button.delete { background: red; color: white; }
+        .shift-item button.delete:hover { background: darkred; }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            font-size: 1em;
+            transition: opacity 0.5s;
+            opacity: 0;
+        }
+
+        @media (max-width: 400px) {
+            header { font-size: 1.3em; padding: 15px; }
+            nav a { padding: 8px 12px; font-size: 0.95em; min-width: 80px; }
+            main { padding: 20px 15px; margin: 15px auto; }
+            input, button, select { padding: 12px; font-size: 1em; }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="hamburger">&#9776;</div>
-    <div class="title">Work Days Tracker</div>
-    <button class="logout">Logout</button>
-  </header>
+<header>WorkDays</header>
 
-  <nav class="sidebar">
-    <button onclick="navigateTo('settings.html')">Settings</button>
-    <button onclick="navigateTo('payslip.html')">Payslip</button>
-  </nav>
+<nav>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="settings.html">Settings</a>
+    <a href="payslip.html">Payslip</a>
+</nav>
 
-  <main class="content">
+<main>
     <section>
-      <h2>Shift Entry</h2>
-      <label for="shift-date">Date</label>
-      <input type="date" id="shift-date" />
-      <label for="shift-hours">Hours Worked</label>
-      <input type="number" id="shift-hours" min="0" max="24" step="0.25" />
-      <label for="holiday-type">Holiday Type</label>
-      <select id="holiday-type">
-        <option value="none">None</option>
-        <option value="legal">Legal Holiday</option>
-        <option value="special">Special Holiday</option>
-      </select>
-      <button id="btn-submit-shift">Submit Shift</button>
+        <h2>Input Shifts</h2>
+        <label>Date:</label>
+        <input type="date" id="shiftDate" />
+        <label>Hours Worked:</label>
+        <input type="number" id="hoursWorked" />
+        <label>Holiday Type:</label>
+        <select id="holidayType">
+            <option value="Regular Day">None</option>
+            <option value="Legal Holiday">Legal Holiday</option>
+            <option value="Special Holiday">Special Holiday</option>
+        </select>
+        <button onclick="addShift()">Submit Shift</button>
+        <div id="message" class="message"></div>
     </section>
 
     <section>
-      <h2>Saved Shifts</h2>
-      <table id="shifts-table">
-        <thead>
-          <tr><th>Date</th><th>Hours</th><th>Holiday</th><th>Actions</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+        <h2>Saved Shifts</h2>
+        <div id="shiftList"></div>
     </section>
-  </main>
 
-  <button class="fab">↑</button>
+    <section>
+        <h2>Delete Shifts</h2>
+        <label>Select Month:</label>
+        <input type="month" id="deleteMonth" />
+        <button onclick="deleteByMonth()">Delete Shifts</button>
+        <hr style="margin: 15px 0" />
+        <button style="background: red" onclick="deleteAllShifts()">Delete All Shifts</button>
+    </section>
+</main>
 
-  <script>
-    let currentUserEmail = sessionStorage.getItem('currentUserEmail');
-    if (!currentUserEmail) { alert("Not logged in"); window.location.href="index.html"; }
+<script>
+let currentUserEmail = sessionStorage.getItem("currentUserEmail");
 
-    const hamburger = document.querySelector('.hamburger');
-    const sidebar = document.querySelector('.sidebar');
-    const logoutBtn = document.querySelector('.logout');
+if (!currentUserEmail) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Not logged in',
+        confirmButtonText: 'OK'
+    }).then(() => { window.location.href = "index.html"; });
+} else {
+    let editOriginalDate = null;
 
-    hamburger.addEventListener('click', ()=> sidebar.classList.toggle('open'));
-    document.addEventListener('click', e=>{
-      if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) sidebar.classList.remove('open');
-    });
-    function navigateTo(page){ sidebar.classList.remove('open'); window.location.href=page; }
-    logoutBtn.addEventListener('click', ()=>{ sessionStorage.removeItem('currentUserEmail'); window.location.href="index.html"; });
-
-    function getUsers(){ return JSON.parse(localStorage.getItem('users')||'{}'); }
-    function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)); }
-    function getShifts(){ return getUsers()[currentUserEmail]?.shifts || []; }
-    function saveShifts(s){ let u=getUsers(); u[currentUserEmail].shifts=s; saveUsers(u); }
-
-    const shiftsTableBody=document.querySelector('#shifts-table tbody');
-    function loadShifts(){
-      const shifts=getShifts();
-      shiftsTableBody.innerHTML='';
-      if(shifts.length===0){ shiftsTableBody.innerHTML="<tr><td colspan=4>No shifts</td></tr>"; return;}
-      shifts.forEach((s,i)=>{
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${s.date}</td><td>${s.hours_worked}</td><td>${s.holiday_type}</td>
-        <td><button onclick="editShift(${i})">Edit</button> <button onclick="deleteShift(${i})">Delete</button></td>`;
-        shiftsTableBody.appendChild(tr);
-      });
+    function getShifts() {
+        return JSON.parse(localStorage.getItem(currentUserEmail + "_shifts")) || [];
     }
-    loadShifts();
 
-    document.getElementById('btn-submit-shift').addEventListener('click', ()=>{
-      const date=document.getElementById('shift-date').value;
-      const hours=parseFloat(document.getElementById('shift-hours').value);
-      const holiday=document.getElementById('holiday-type').value;
-      if(!date||isNaN(hours)){alert("Invalid input"); return;}
-      let shifts=getShifts(); 
-      const idx=shifts.findIndex(s=>s.date===date);
-      if(idx>-1) shifts[idx]={date,hours_worked:hours,holiday_type:holiday};
-      else shifts.push({date,hours_worked:hours,holiday_type:holiday});
-      saveShifts(shifts); loadShifts();
-    });
+    function saveShifts(shifts) {
+        localStorage.setItem(currentUserEmail + "_shifts", JSON.stringify(shifts));
+    }
 
-    window.editShift=i=>{
-      const s=getShifts()[i];
-      document.getElementById('shift-date').value=s.date;
-      document.getElementById('shift-hours').value=s.hours_worked;
-      document.getElementById('holiday-type').value=s.holiday_type;
-      window.scrollTo(0,0);
+    function getMonthKey(dateStr) {
+        const d = new Date(dateStr);
+        return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}`;
     }
-    window.deleteShift=i=>{
-      if(!confirm("Delete shift?")) return;
-      let shifts=getShifts(); shifts.splice(i,1); saveShifts(shifts); loadShifts();
+
+    function renderShifts() {
+        const list = document.getElementById("shiftList");
+        const shifts = getShifts().sort((a, b) => new Date(b.date) - new Date(a.date));
+        list.innerHTML = "";
+
+        if (shifts.length === 0) {
+            list.innerHTML = "<p>No shifts recorded yet.</p>";
+            return;
+        }
+
+        const grouped = {};
+        shifts.forEach(shift => {
+            const key = getMonthKey(shift.date);
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(shift);
+        });
+
+        for (const month in grouped) {
+            const header = document.createElement("div");
+            header.className = "shift-group";
+            header.textContent = month;
+
+            const container = document.createElement("div");
+            container.className = "shift-list";
+
+            grouped[month].forEach(shift => {
+                const div = document.createElement("div");
+                div.className = "shift-item";
+                div.innerHTML = `<span><strong>${shift.date}</strong> — ${shift.hours} hrs (${shift.type})</span>
+                <div>
+                    <button onclick="editShift('${shift.date}')">Edit</button>
+                    <button class="delete" onclick="deleteShift('${shift.date}')">Delete</button>
+                </div>`;
+                container.appendChild(div);
+            });
+
+            header.addEventListener("click", () => {
+                document.querySelectorAll(".shift-list.show").forEach(el => {
+                    if (el !== container) el.classList.remove("show");
+                });
+                container.classList.toggle("show");
+            });
+
+            list.appendChild(header);
+            list.appendChild(container);
+        }
+
+        if (Object.keys(grouped).length > 3) {
+            list.style.maxHeight = "600px";
+            list.style.overflowY = "auto";
+        } else {
+            list.style.maxHeight = "none";
+            list.style.overflowY = "visible";
+        }
     }
-  </script>
+
+    function addShift() {
+        const date = document.getElementById("shiftDate").value;
+        const hours = parseFloat(document.getElementById("hoursWorked").value);
+        const holiday = document.getElementById("holidayType").value;
+
+        if (!date || isNaN(hours) || hours < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Input',
+                text: "Please enter valid shift details.",
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        let shifts = getShifts();
+        const existingIndex = shifts.findIndex(s => s.date === date);
+
+        const proceedAdd = () => {
+            if (editOriginalDate) {
+                shifts = shifts.filter(s => s.date !== editOriginalDate);
+                shifts.push({ date, hours, type: holiday });
+                editOriginalDate = null;
+            } else if (existingIndex > -1) {
+                shifts[existingIndex] = { date, hours, type: holiday };
+            } else {
+                shifts.push({ date, hours, type: holiday });
+            }
+
+            let groupedKeys = [...new Set(shifts.map(s => getMonthKey(s.date)))];
+            if (groupedKeys.length > 5) {
+                const oldestMonth = groupedKeys.sort()[0];
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Too Many Months',
+                    text: `You already have 5 month groups. Delete the oldest month (${oldestMonth}) to add new shift?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        shifts = shifts.filter(s => getMonthKey(s.date) !== oldestMonth);
+                        saveShifts(shifts);
+                        renderShifts();
+                    }
+                });
+                return;
+            }
+
+            saveShifts(shifts);
+            renderShifts();
+            document.getElementById("shiftDate").value = "";
+            document.getElementById("hoursWorked").value = "";
+            document.getElementById("holidayType").value = "Regular Day";
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Shift Saved',
+                text: 'Shift saved successfully!',
+                confirmButtonText: 'OK'
+            });
+        };
+
+        if (existingIndex > -1 && !editOriginalDate) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Overwrite Shift?',
+                text: "You already entered a shift for this date. Overwrite it?",
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(result => { if (result.isConfirmed) proceedAdd(); });
+        } else {
+            proceedAdd();
+        }
+    }
+
+    function editShift(date) {
+        const shifts = getShifts();
+        const shift = shifts.find(s => s.date === date);
+        if (!shift) return;
+
+        document.getElementById("shiftDate").value = shift.date;
+        document.getElementById("hoursWorked").value = shift.hours;
+        document.getElementById("holidayType").value = shift.type;
+        editOriginalDate = shift.date;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function deleteShift(date) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete Shift?',
+            text: `Are you sure you want to delete the shift on ${date}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (result.isConfirmed) {
+                let shifts = getShifts();
+                shifts = shifts.filter(s => s.date !== date);
+                saveShifts(shifts);
+                renderShifts();
+            }
+        });
+    }
+
+    function deleteByMonth() {
+        const monthInput = document.getElementById("deleteMonth").value;
+        if (!monthInput) {
+            Swal.fire({
+                icon: 'error',
+                title: 'No Month Selected',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete Shifts?',
+            text: `Are you sure you want to delete all shifts for ${monthInput}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (!result.isConfirmed) return;
+
+            const [year, month] = monthInput.split("-").map(Number);
+            let shifts = getShifts();
+            shifts = shifts.filter(s => {
+                const d = new Date(s.date);
+                return !(d.getFullYear() === year && d.getMonth() + 1 === month);
+            });
+
+            saveShifts(shifts);
+            renderShifts();
+            document.getElementById("deleteMonth").value = "";
+        });
+    }
+
+    function deleteAllShifts() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Delete All Shifts?',
+            text: "Are you sure you want to delete ALL shifts?",
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (result.isConfirmed) {
+                saveShifts([]);
+                renderShifts();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'All Shifts Deleted',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+
+    renderShifts();
+}
+</script>
 </body>
 </html>
