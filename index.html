@@ -135,7 +135,7 @@
             });
 
             function goToAdminLogin() {
-                window.location.href = "pages/adm/admin-login.html";
+                window.location.href = "admin-login.html";
             }
     
     function showMessage(msg) {
@@ -165,7 +165,7 @@
       if (users[email] && users[email].password === password) {
         // Save current user email in sessionStorage and redirect to main.html
         sessionStorage.setItem('currentUserEmail', email);
-        window.location.href = 'pages/main.html';
+        window.location.href = 'main.html';
       } else {
         showMessage('Invalid email or password.');
       }
