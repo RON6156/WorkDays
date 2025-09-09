@@ -1,7 +1,6 @@
-![CI/CD](https://github.com/RON6156/WorkDays/actions/workflows/ci-cd-pr.yml/badge.svg)
-
-
 # WorkDays App
+[![Beta Release](https://img.shields.io/github/v/release/RON6156/WorkDays?include_prereleases&logo=github&label=beta&color=F97316)](https://github.com/RON6156/WorkDays/releases)
+
 
 A simple client-side web app to **track work shifts and generate payslips** using **HTML, CSS, and JavaScript**.
 
