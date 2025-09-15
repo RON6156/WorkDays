@@ -1,5 +1,13 @@
 # WorkDays App
-[![Beta Release](https://img.shields.io/github/v/release/RON6156/WorkDays?include_prereleases&logo=github&label=beta&color=F97316)](https://github.com/RON6156/WorkDays/releases)
+![GitHub release](https://img.shields.io/github/v/release/RON6156/WorkDays?logo=github&logoColor=white)
+
+[![Netlify Verified](https://img.shields.io/badge/Netlify-Verified-00C7B7?logo=netlify&logoColor=white)](https://workdays-app.netlify.app)
+
+![HTML5](https://img.shields.io/badge/HTML5-%23E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-%231572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-%23F7DF1E?logo=javascript&logoColor=black)
+
+![Last Commit](https://img.shields.io/github/last-commit/RON6156/WorkDays?logo=github&logoColor=white)
 
 
 A simple client-side web app to **track work shifts and generate payslips** using **HTML, CSS, and JavaScript**.
