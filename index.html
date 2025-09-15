@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WorkDays</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2684383807209830"
-     crossorigin="anonymous"></script>
-  <!-- SweetAlert2 CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+                                                                                                                          rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <style>
     :root {
@@ -18,9 +17,12 @@
       --bg: #f5f9ff;
       --text: #333;
     }
-
-    * { box-sizing: border-box; font-family: 'Noto Sans', sans-serif; }
-
+    
+    * {
+      box-sizing: border-box;
+      font-family: 'Noto Sans', sans-serif;
+    }
+    
     body {
       background: var(--bg);
       margin: 0;
@@ -30,19 +32,59 @@
       align-items: center;
       min-height: 100vh;
     }
-
+    
+    
+    body.admin-mode {
+      background: #0d0d0d;
+      color: #00ff99;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    #admin-btn {
+      display: none;
+      max-width: 250px;
+      padding: 10px 16px;
+      font-size: 1.2em;
+      background: #00ff99;
+      color: #000;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: Courier New, monospace;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: relative;
+    }
+    
+    #admin-btn.show {
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      
+    }
+    
+    #admin-btn:hover {
+      background: transparent;
+      border: solid #00ffaa;
+      color: #00ff99;
+      transition: 0.3s ease;
+    }
+    
+    
     main.login-container {
       background: white;
       padding: 25px 20px;
       border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       width: 95%;
       max-width: 400px;
       display: flex;
       flex-direction: column;
       gap: 15px;
     }
-
+    
     header {
       text-align: center;
       font-size: 1.5em;
@@ -50,28 +92,29 @@
       color: var(--primary-dark);
       margin-bottom: 50px;
     }
-
-    input[type="email"], input[type="password"] {
+    
+    input[type="email"],
+    input[type="password"] {
       width: 100%;
       padding: 14px;
       border: 1px solid #ccc;
-      border-radius: 20px;
+      border-radius: 12px;
       font-size: 1em;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-
+    
     input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 8px rgba(21, 101, 192, 0.3);
       outline: none;
     }
-
+    
     .btn-group {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-
+    
     button {
       flex: 1 1 48%;
       padding: 14px;
@@ -84,31 +127,27 @@
       cursor: pointer;
       transition: background 0.3s, transform 0.2s;
     }
-
+    
     button:hover {
       background: var(--primary-dark);
       transform: translateY(-2px);
     }
-
-    #admin-btn {
-      display: none;
-      margin-top: 10px;
-      background: #263238;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-    }
-
+    
     @media (max-width: 400px) {
-      main.login-container { padding: 20px 15px; }
-      input[type="email"], input[type="password"], button { padding: 12px; font-size: 1em; }
+      main.login-container {
+        padding: 20px 15px;
+      }
+      
+      input[type="email"],
+      input[type="password"],
+      button {
+        padding: 12px;
+        font-size: 1em;
+      }
     }
   </style>
 </head>
+
 <body>
   <main class="login-container" role="main" aria-label="Login or Sign Up">
     <header>WorkDays</header>
@@ -122,9 +161,8 @@
   </main>
   
   <!-- Hidden admin login button -->
-  <button id="admin-btn" onclick="goToAdminLogin()">Admins</button>
-
-  <!-- SweetAlert2 JS -->
+  <button id="admin-btn" onclick="goToAdminLogin()">Admin</button>
+  
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     let clickCount = 0;
@@ -133,8 +171,12 @@
     document.body.addEventListener("click", () => {
         clickCount++;
         if (clickCount === 5) {
+            document.querySelector(".login-container").style.display = "none";
+            
+            document.body.classList.add("admin-mode");
+          
             document.getElementById("admin-btn").style.display = "inline-block";
-            // Admin reveal as popup
+            
             Swal.fire({
               icon: 'info',
               title: 'Admin login revealed!',
@@ -156,8 +198,8 @@
     function showToast(msg, type = 'success') {
       let bg;
       switch(type){
-        case 'success': bg = '#4caf50'; break; // green
-        case 'error': bg = '#c62828'; break;  // red
+        case 'success': bg = '#4caf50'; break;
+        case 'error': bg = '#c62828'; break;  
         default: bg = '#1565c0';
       }
 
@@ -176,7 +218,7 @@
       });
     }
 
-    // Store users as array of objects instead of single object
+    // Store users as array of objects
     function getUsers() {
       return JSON.parse(localStorage.getItem('accounts') || '[]');
     }
@@ -247,17 +289,6 @@
       clearFields();
     }
   </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2684383807209830"
-     crossorigin="anonymous"></script>
-<!-- Responsive Horizontal -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2684383807209830"
-     data-ad-slot="9576231710"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 </body>
+
 </html>

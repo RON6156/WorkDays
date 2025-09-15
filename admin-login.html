@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,12 +13,14 @@
       --primary-glow: #00ffaa;
       --danger: #ff0033;
     }
-
+    
     * {
       box-sizing: border-box;
       font-family: "Courier New", monospace;
+      margin: 0;
+      padding: 0;
     }
-
+    
     body {
       margin: 0;
       padding: 0;
@@ -27,85 +30,84 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      padding: 1rem;
     }
-
+    
     .container {
       background: var(--panel-bg);
-      padding: 2rem;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,255,153,0.2);
-      width: 95%;
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.2);
+      width: 100%;
       max-width: 400px;
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
       text-align: center;
     }
-
+    
     h1 {
-      margin: 0 0 1rem 0;
-      font-size: 1.5rem;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
       color: var(--primary);
       text-shadow: 0 0 8px var(--primary-glow);
     }
-
+    
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 14px;
+      padding: clamp(12px, 3vw, 16px);
       background: #111;
       border: 1px solid var(--primary);
       border-radius: 6px;
-      font-size: 1rem;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
       color: var(--primary);
     }
-
+    
     input::placeholder {
       color: #555;
     }
-
+    
     input:focus {
       outline: none;
       border-color: var(--primary-glow);
       box-shadow: 0 0 8px var(--primary-glow);
     }
-
+    
     button {
-      padding: 14px;
+      padding: clamp(12px, 3vw, 16px);
       background: var(--primary);
       border: none;
       border-radius: 6px;
       color: #000;
-      font-size: 1rem;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
       font-weight: bold;
       cursor: pointer;
       transition: 0.2s;
     }
-
+    
     button:hover {
       background: var(--primary-glow);
       box-shadow: 0 0 10px var(--primary-glow);
       transform: translateY(-2px);
     }
-
+    
     .error {
       color: var(--danger);
-      font-size: 0.9rem;
+      font-weight: bold;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
       display: none;
     }
-
-    @media (max-width: 400px) {
+    
+    /* Extra small screens (<320px) */
+    @media (max-width: 320px) {
       .container {
-        padding: 1.5rem;
-      }
-      input,
-      button {
-        font-size: 0.9rem;
-        padding: 12px;
+        padding: 1rem;
+        gap: 1rem;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Admin Login</h1>
@@ -114,7 +116,7 @@
     <button onclick="adminLogin()">Login</button>
     <p id="error-msg" class="error">Invalid admin email or password.</p>
   </div>
-
+  
   <script>
     function adminLogin() {
       const email = document.getElementById("admin-email").value.trim().toLowerCase();
@@ -143,4 +145,5 @@
     }
   </script>
 </body>
+
 </html>
