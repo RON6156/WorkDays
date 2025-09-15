@@ -1,40 +1,67 @@
-name: Generate Last-Commit Badge (MM/DD/YY)
+name: Update Last Commit Badge
+
 on:
   push:
-    branches: [ main ]   # change if your default branch is different
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   generate-badge:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout main branch
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: main
+          persist-credentials: true  # keep credentials for pushing
 
-      - name: Get last commit ISO timestamp
+      - name: Get last commit date and format as MM/DD/YY
         id: lastcommit
         run: |
-          # get ISO 8601 commit date of HEAD
-          iso=$(git log -1 --format=%cI)
-          echo "iso=$iso" >> $GITHUB_OUTPUT
+          # Get most recent commit date in ISO 8601 format
+          dt_iso=$(git log -1 --format=%cd --date=iso-strict)
+          # Format to MM/DD/YY using date command
+          formatted_date=$(date -d "$dt_iso" +"%m/%d/%y")
+          echo "last_commit_date=$formatted_date" >> $GITHUB_OUTPUT
 
-      - name: Format date MM/DD/YY
-        id: fmt
+      - name: Create SVG badge file last-commit-badge.svg
         run: |
-          iso="${{ steps.lastcommit.outputs.iso }}"
-          # convert to MM/DD/YY
-          formatted=$(date -d "$iso" +"%m/%d/%y")
-          echo "formatted=$formatted" >> $GITHUB_OUTPUT
+          cat > last-commit-badge.svg << 'EOF'
+          <svg xmlns="http://www.w3.org/2000/svg" width="115" height="20">
+            <linearGradient id="s" x2="0" y2="100%">
+              <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+              <stop offset="1" stop-opacity=".1"/>
+            </linearGradient>
+            <mask id="m">
+              <rect width="115" height="20" rx="3" fill="#fff"/>
+            </mask>
+            <g mask="url(#m)">
+              <rect width="65" height="20" fill="#555555"/>
+              <rect x="65" width="50" height="20" fill="#1577ff"/>
+              <rect width="115" height="20" fill="url(#s)"/>
+            </g>
+            <g fill="#fff" text-anchor="middle" font-family="Verdana" font-size="11">
+              <text x="32.5" y="14" fill="#fff">last commit</text>
+              <text x="90" y="14" fill="#fff">${{ steps.lastcommit.outputs.last_commit_date }}</text>
+            </g>
+          </svg>
+          EOF
 
-      - name: Create SVG badge (simple)
-        id: make_svg
+      - name: Configure git user
         run: |
-          D="${{ steps.fmt.outputs.formatted }}"
-          # Choose colors / label / font-size here as needed
-          cat > last-commit-badge.svg <<'SVG'
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20" role="img" aria-label="Last commit">
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push badge if changed
+        run: |
+          git add last-commit-badge.svg
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update last-commit-badge.svg to ${{ steps.lastcommit.outputs.last_commit_date }}"
+            git push origin main
+          fi<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20" role="img" aria-label="Last commit">
   <rect width="80" height="20" fill="#555"/>
   <rect x="80" width="120" height="20" fill="#1577ff"/>
   <g fill="#fff" font-family="Verdana,Arial,sans-serif" font-size="11">
