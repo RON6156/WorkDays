@@ -45,6 +45,20 @@
       gap: 1.2rem;
       text-align: center;
     }
+   
+   .testbtn {
+     display: flex;
+     text-align: start;
+     background: orange;
+     text-decoration: none;
+     font-size: 0.5em;
+     padding: 5px;
+     width: 25px;
+   }
+   
+   .testbtn:hover {
+     background: red;
+   }
     
     h1 {
       font-size: clamp(1.3rem, 5vw, 1.8rem);
@@ -114,11 +128,9 @@
     <input type="email" id="admin-email" placeholder="Admin Email" required />
     <input type="password" id="admin-password" placeholder="Password" required />
     <button onclick="adminLogin()">Login</button>
+   <button class="testbtn"><a href="backup.html">Test</a></button>
     <p id="error-msg" class="error">Invalid admin email or password.</p>
   </div>
-  
-  <div style="display: flex; text-align: center; margin-top: 20px"><button href="backup.html" style="background: orange; color: #ffff;">Test</button></div>
-  
   <script>
     function adminLogin() {
       const email = document.getElementById("admin-email").value.trim().toLowerCase();
