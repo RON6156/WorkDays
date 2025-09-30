@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkDays - Payslip</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+                                                                                                                          rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link rel="stylesheet" href="css/payslip.css">
+</head>
+
+<body>
+  <header class="main-header">WorkDays</header>
+  <header class="sub-header">
+    <div style="display: flex; align-items: center">
+      <span class="hamburger" onclick="toggleMenu()">
+        <ion-icon id="menu-icon" name="menu-outline"></ion-icon>
+      </span>
+      Payslip
+    </div>
+     <button id="logoutBtn">
+      <ion-icon id="logout-icon" name="exit-outline"></ion-icon>
+    </button>
+  </header>
+  <!-- Slide-down menu -->
+  <nav id="menu">
+    <a href="dashboard.html">
+      <ion-icon name="grid-outline"></ion-icon> Dashboard
+    </a>
+    <a href="add-shift.html">
+      <ion-icon name="duplicate-outline"></ion-icon> Add Shift
+    </a>
+    <a href="settings.html">
+      <ion-icon name="settings-outline"></ion-icon> Settings
+    </a>
+    <a href="payslip.html" class="active">
+      <ion-icon name="document-text-outline"></ion-icon> Payslip
+    </a>
+  </nav>
+  
+  <main id="mainContent">
+    <h2>Payslip</h2>
+    
+    <button id="generatePayslip">Generate Payslip</button>
+    
+    <div class="payslip" id="payslipOutput">
+      <h3>Employee Payslip</h3>
+      <pre id="payslipContent">Click "Generate Payslip" to view your payslip for the current cut-off.</pre>
+    </div>
+  </main>
+  
+  <script src="js/payslip.js"></script>
+</body>
+
+</html>
