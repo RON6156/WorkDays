@@ -1,0 +1,110 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Device Offline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+                                                                                                                          rel="stylesheet">
+  
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <style type="text/css">
+    :root {
+      --background-color: white;
+      --primary-color: #1C1C1E;
+    }
+    
+    [data-theme="dark"] {
+      --background-color: #121212;
+      --primary-color: #eee;
+    }
+    
+    [data-theme="light"] {
+      --background-color: white;
+      --primary-color: #1C1C1E;
+    }
+    
+    html,
+    body {
+      background-color: var(--background-color) !important;
+    }
+    
+    html,
+    body,
+    button {
+      font-family: Noto Sans, sans-serif;
+      font-size: 18px;
+    }
+    
+    div.container {
+      color: var(--primary-color);
+      position: relative;
+      top: 100px;
+      text-align: center;
+    }
+    
+    .offline-icon svg {
+      height: 148px;
+      width: 148px;
+      color: var(--primary-color);
+    }
+    
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #1565c0;
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    
+    button:hover {
+      background: #0d47a1;
+      transform: translateY(-2px);
+    }
+    
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="logo" class="offline-icon">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path d="M93.72,183.25C49.49,198.05,16,233.1,16,288c0,66,54,112,120,112H320.37" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M467.82,377.74C485.24,363.3,496,341.61,496,312c0-59.82-53-85.76-96-88-8.89-89.54-71-144-144-144-26.16,0-48.79,6.93-67.6,18.14" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="448" y1="448" x2="64" y2="64" style="fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"/></svg>
+    </div>
+    <span id="message">
+      <p>No internet connection<br />Check your connection and try again</p>
+    </span>
+    <button id="retryButton" type="button" onclick="gonative.webview.reload()">Retry</button>
+  </div>
+  <script>
+    var message = document.getElementById('message');
+    var retryButton = document.getElementById('retryButton')
+    if (['ko', 'ko-kr', 'ko-kp'].indexOf(navigator.language.toLowerCase()) > -1) {
+      // Korean
+      message.innerHTML = '<p>인터넷 연결이 끊겼습니다.<br/>연결하고 다시 시도하시길 바랍니다.</p>';
+      retryButton.innerText = '괜찮아';
+    }
+    function updateDarkMode(){
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+      else {
+        document.documentElement.setAttribute("data-theme", "light");
+      } 
+    }
+    updateDarkMode();
+    if(window.matchMedia){
+      window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', updateDarkMode);
+    }
+  </script>
+</body>
+
+</html>
