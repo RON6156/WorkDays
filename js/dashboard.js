@@ -1,226 +1,199 @@
-const menu = document.getElementById("menu");
-const menuIcon = document.getElementById("menu-icon");
-const mainContent = document.getElementById("mainContent");
-const body = document.body;
+document.addEventListener("DOMContentLoaded", () => {
+  const menu = document.getElementById("menu");
+  const menuIcon = document.getElementById("menu-icon");
+  const mainContent = document.getElementById("mainContent");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const cutoffDisplay = document.getElementById("cutoffDisplay");
 
-function toggleMenu() {
-  const isOpen = menu.classList.contains("show");
-  const gap = 20;
+  // Cards
+  const daysWorkedEl = document.getElementById("daysWorked");
+  const hoursWorkedEl = document.getElementById("hoursWorked");
+  const overtimeHoursEl = document.getElementById("overtimeHours");
+  const legalHolidayCountEl = document.getElementById("legalHolidayCount");
+  const specialHolidayCountEl = document.getElementById("specialHolidayCount");
+  const legalHolidayOTEl = document.getElementById("legalHolidayOT");
+  const specialHolidayOTEl = document.getElementById("specialHolidayOT");
 
-  menuIcon.classList.add("animate-out");
-  setTimeout(() => {
-    menuIcon.setAttribute("name", isOpen ? "menu-outline" : "close-outline");
-    menuIcon.classList.remove("animate-out");
-    menuIcon.classList.add("animate-in");
-    setTimeout(() => menuIcon.classList.remove("animate-in"), 300);
-  }, 300);
-
-  menu.classList.toggle("show");
-  mainContent.style.marginTop = !isOpen ? menu.offsetHeight + gap + "px" : "20px";
-}
-
-const currentUserEmail = sessionStorage.getItem("currentUserEmail");
-if (!currentUserEmail) {
-  Swal.fire({ icon: "error", title: "Not logged in", confirmButtonText: "OK" })
-    .then(() => window.location.href = "index.html");
-} else {
-  let editOriginalDate = null;
-
-  function getShifts() {
-    return JSON.parse(localStorage.getItem(currentUserEmail + "_shifts") || "[]");
-  }
-
-  function saveShifts(shifts) {
-    localStorage.setItem(currentUserEmail + "_shifts", JSON.stringify(shifts));
-  }
-
-  function getMonthKey(dateStr) {
-    const d = new Date(dateStr);
-    return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}`;
-  }
-
-  function getMonthNameYear(dateStr) {
-    const d = new Date(dateStr);
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    return `${months[d.getMonth()]} ${d.getFullYear()}`;
-  }
-
-  function renderShifts() {
-    const list = document.getElementById("shiftList");
-    const shifts = getShifts()
-      .filter(s => s.date)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    list.innerHTML = "";
-    if (!shifts.length) { list.innerHTML = "<p>No shifts recorded yet.</p>"; return; }
-
-    const grouped = {};
-    shifts.forEach(s => {
-      const key = getMonthKey(s.date);
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(s);
+  // Get user email
+  const currentUserEmail = sessionStorage.getItem("currentUserEmail");
+  if (!currentUserEmail) {
+    Swal.fire({
+      icon: "warning",
+      title: "Not Logged In",
+      text: "Please log in to access the dashboard.",
+    }).then(() => {
+      window.location.href = "index.html";
     });
-
-    for (const month in grouped) {
-      const header = document.createElement("div");
-      header.className = "shift-group";
-      header.innerHTML = `<span class="arrow">▶</span><span style="margin-left:8px;">${getMonthNameYear(grouped[month][0].date)}</span>`;
-
-      const container = document.createElement("div");
-      container.className = "shift-list";
-      grouped[month].forEach(s => {
-        const div = document.createElement("div");
-        div.className = "shift-item";
-        div.innerHTML = `<span><strong>${s.date}</strong> — ${s.hours} hrs (${s.type})</span>
-                    <div>
-                        <button onclick="editShift('${s.date}')">Edit</button>
-                        <button class="delete" onclick="deleteShift('${s.date}')">Delete</button>
-                    </div>`;
-        container.appendChild(div);
-      });
-
-      header.addEventListener("click", () => {
-        const isOpen = container.classList.contains("show");
-        document.querySelectorAll(".shift-list.show").forEach(el => {
-          el.classList.remove("show");
-          if (el.previousElementSibling) el.previousElementSibling.classList.remove("open");
-        });
-        if (!isOpen) {
-          container.classList.add("show");
-          header.classList.add("open");
-        }
-      });
-
-      list.appendChild(header);
-      list.appendChild(container);
-    }
+    return;
   }
 
-  function addShift() {
-    const date = document.getElementById("shiftDate").value;
-    const hours = parseFloat(document.getElementById("hoursWorked").value);
-    const type = document.getElementById("holidayType").value;
-    if (!date || isNaN(hours) || hours < 0) {
-      Swal.fire({ icon: "error", title: "Invalid Input", text: "Please enter valid shift details." });
-      return;
-    }
-
-    let shifts = getShifts();
-    const existingIndex = shifts.findIndex(s => s.date === date);
-
-    const proceed = () => {
-      if (editOriginalDate) {
-        shifts = shifts.filter(s => s.date !== editOriginalDate);
-        shifts.push({ date, hours, type });
-        editOriginalDate = null;
-      } else if (existingIndex > -1) {
-        shifts[existingIndex] = { date, hours, type };
-      } else {
-        shifts.push({ date, hours, type });
-      }
-      saveShifts(shifts);
-      renderShifts();
-      document.getElementById("shiftDate").value = "";
-      document.getElementById("hoursWorked").value = "";
-      document.getElementById("holidayType").value = "Regular Day";
-      Swal.fire({ icon: "success", title: "Shift Saved", text: "Shift saved successfully!" });
-    };
-
-    if (existingIndex > -1 && !editOriginalDate) {
+// Logout button
+logoutBtn.addEventListener("click", () => {
+  Swal.fire({
+    icon: "warning",
+    title: "Log Out?",
+    text: "Are you sure you want to log out?",
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    cancelButtonText: "Cancel"
+  }).then(r => {
+    if (r.isConfirmed) {
+      sessionStorage.removeItem("currentUserEmail");
       Swal.fire({
-        icon: "question",
-        title: "Overwrite Shift?",
-        text: "You already entered a shift for this date. Overwrite it?",
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        cancelButtonText: "No"
-      }).then(r => { if (r.isConfirmed) proceed(); });
-    } else { proceed(); }
+        icon: "success",
+        title: "Logged Out"
+      }).then(() => {
+        window.location.href = "index.html";
+      });
+    }
+  });
+});
+
+
+
+  // Load settings
+  const dailyRate = parseFloat(localStorage.getItem("dailyRate")) || 0;
+  const overtimeRate = parseFloat(localStorage.getItem("overTimeRate")) || 0;
+  const firstCutoff = localStorage.getItem("firstCutoff");
+  const secondCutoff = localStorage.getItem("secondCutoff");
+
+  if (firstCutoff && secondCutoff) {
+    cutoffDisplay.textContent = `Cutoff Period: ${firstCutoff} to ${secondCutoff}`;
+  } else {
+    cutoffDisplay.textContent = "Cutoff Period: Not Set";
   }
 
-  function editShift(date) {
-    const shift = getShifts().find(s => s.date === date);
-    if (!shift) return;
-    document.getElementById("shiftDate").value = shift.date;
-    document.getElementById("hoursWorked").value = shift.hours;
-    document.getElementById("holidayType").value = shift.type;
-    editOriginalDate = shift.date;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  // Load shifts (same logic as payslip.js)
+  const allShifts = JSON.parse(localStorage.getItem(currentUserEmail + "_shifts") || "[]");
+  const cutoffStart = firstCutoff ? new Date(firstCutoff) : null;
+  const cutoffEnd = secondCutoff ? new Date(secondCutoff) : null;
+  if (cutoffEnd) cutoffEnd.setHours(23, 59, 59, 999);
 
-  function deleteShift(date) {
-    Swal.fire({
-      icon: "warning",
-      title: "Delete Shift?",
-      text: `Are you sure you want to delete the shift on ${date}?`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel"
-    }).then(r => {
-      if (r.isConfirmed) {
-        saveShifts(getShifts().filter(s => s.date !== date));
-        renderShifts();
-        Swal.fire({ icon: "success", title: "Shift Deleted" });
+  const shiftsInPeriod = cutoffStart && cutoffEnd
+    ? allShifts.filter(shift => {
+      const shiftDate = new Date(shift.date);
+      return shiftDate >= cutoffStart && shiftDate <= cutoffEnd;
+    })
+    : allShifts;
+
+  // Initialize counters
+  let regularDays = 0, regularOTHours = 0;
+  let legalHolidayDays = 0, legalHolidayOT = 0;
+  let specialHolidayDays = 0, specialHolidayOT = 0;
+  let totalWorkedHours = 0;
+
+shiftsInPeriod.forEach(shift => {
+  const hours = parseFloat(shift.hours || 0);
+  const ot = Math.max(0, hours - 8);
+  totalWorkedHours += hours;
+
+  
+  const dayEquivalent = hours > 0 ? Math.min(hours / 8, 1) : 0;
+
+  if (shift.type === "Legal Holiday") {
+      if (hours > 0) {
+          legalHolidayDays += dayEquivalent;
+          legalHolidayOT += ot;
+      } else {
+          legalHolidayDays += 1;
+          shift.legalHolidayZeroHours = true;
       }
-    });
-  }
-
-  function deleteByMonth() {
-    const monthInput = document.getElementById("deleteMonth").value;
-    if (!monthInput) { Swal.fire({ icon: "error", title: "No Month Selected" }); return; }
-    Swal.fire({
-      icon: "warning",
-      title: "Delete Shifts?",
-      text: `Are you sure you want to delete all shifts for ${monthInput}?`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel"
-    }).then(r => {
-      if (!r.isConfirmed) return;
-      const [year, month] = monthInput.split("-").map(Number);
-      saveShifts(getShifts().filter(s => {
-        const d = new Date(s.date);
-        return !(d.getFullYear() === year && d.getMonth() + 1 === month);
-      }));
-      renderShifts();
-      document.getElementById("deleteMonth").value = "";
-      Swal.fire({ icon: "success", title: "Shifts Deleted" });
-    });
-  }
-
-  function deleteAllShifts() {
-    Swal.fire({
-      icon: "warning",
-      title: "Delete All Shifts?",
-      text: "Are you sure you want to delete ALL shifts?",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel"
-    }).then(r => {
-      if (r.isConfirmed) {
-        saveShifts([]);
-        renderShifts();
-        Swal.fire({ icon: "success", title: "All Shifts Deleted" });
+  } else if (shift.type === "Special Holiday") {
+      if (hours > 0) {
+          specialHolidayDays += dayEquivalent;
+          specialHolidayOT += ot;
+      } else {
+          specialHolidayDays += 1;
+          shift.specialHolidayZeroHours = true;
       }
-    });
-  }
-
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    Swal.fire({
-      icon: "warning",
-      title: "Log Out?",
-      text: "Are you sure you want to log out?",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel"
-    }).then(r => {
-      if (r.isConfirmed) {
-        sessionStorage.removeItem("currentUserEmail");
-        Swal.fire({ icon: "success", title: "Logged Out" }).then(() => window.location.href = "index.html");
+  } else {
+      if (hours > 0) {
+          regularDays += dayEquivalent;
+          regularOTHours += ot;
       }
-    });
+  }
+});
+
+
+  // Display results
+  daysWorkedEl.textContent = regularDays;
+  hoursWorkedEl.textContent = totalWorkedHours;
+  overtimeHoursEl.textContent = regularOTHours;
+  legalHolidayCountEl.textContent = legalHolidayDays;
+  specialHolidayCountEl.textContent = specialHolidayDays;
+  legalHolidayOTEl.textContent = legalHolidayOT;
+  specialHolidayOTEl.textContent = specialHolidayOT;
+
+  // Chart.js Pie Chart
+  const ctx = document.getElementById("workPieChart").getContext("2d");
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: [
+        "Regular Days",
+        "Regular OT",
+        "Legal Holiday",
+        "Special Holiday",
+        "Legal Holiday OT",
+        "Special Holiday OT",
+      ],
+      datasets: [
+        {
+          data: [
+            regularDays,
+            regularOTHours,
+            legalHolidayDays,
+            specialHolidayDays,
+            legalHolidayOT,
+            specialHolidayOT,
+          ],
+          backgroundColor: [
+            "#36A2EB", // Regular Days
+            "#FF6384", // Regular OT
+            "#4BC0C0", // Legal Holiday
+            "#FFCD56", // Special Holiday
+            "#9966FF", // Legal Holiday OT
+            "#FF9F40", // Special Holiday OT
+          ],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            font: {
+              family: "Noto Sans",
+              size: 12,
+            },
+            color: "#333",
+          },
+        },
+      },
+    },
   });
 
-  renderShifts();
-}
+  // Toggle Menu with animated icon
+  window.toggleMenu = function () {
+    const isOpen = menu.classList.contains("show");
+    const gap = 20;
 
+    // Animate icon
+    menuIcon.classList.add("animate-out");
+    setTimeout(() => {
+      menuIcon.setAttribute("name", isOpen ? "menu-outline" : "close-outline");
+      menuIcon.classList.remove("animate-out");
+      menuIcon.classList.add("animate-in");
+      setTimeout(() => menuIcon.classList.remove("animate-in"), 300);
+    }, 300);
+
+    // Toggle menu
+    menu.classList.toggle("show");
+
+    // Adjust content
+    mainContent.style.marginTop = !isOpen
+      ? menu.offsetHeight + gap + "px"
+      : "20px";
+  };
+});

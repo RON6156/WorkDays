@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WorkDays - Settings</title>
+  <title>WorkDays - Add Shift</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -13,7 +13,7 @@
   <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/add-shift.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
       <span class="hamburger" onclick="toggleMenu()">
         <ion-icon id="menu-icon" name="menu-outline"></ion-icon>
       </span>
-      Settings
+      Add Shift
     </div>
     <button id="logoutBtn">
       <ion-icon id="logout-icon" name="exit-outline"></ion-icon>
@@ -34,10 +34,10 @@
     <a href="dashboard.html">
       <ion-icon name="grid-outline"></ion-icon> Dashboard
     </a>
-    <a href="add-shift.html">
+    <a href="add-shift.html" class="active">
       <ion-icon name="duplicate-outline"></ion-icon> Add Shift
     </a>
-    <a href="settings.html" class="active">
+    <a href="settings.html">
       <ion-icon name="settings-outline"></ion-icon> Settings
     </a>
     <a href="payslip.html">
@@ -46,26 +46,41 @@
   </nav>
   
   <main id="mainContent">
-    <h2>Settings</h2>
+    <section>
+      <h2>Input Shifts</h2>
+      <label>Date:</label>
+      <input type="date" id="shiftDate" />
+      <label>Hours Worked:</label>
+      <input type="number" id="hoursWorked" />
+      <label>Holiday Type:</label>
+      <select id="holidayType">
+        <option value="Regular Day">None</option>
+        <option value="Legal Holiday">Legal Holiday</option>
+        <option value="Special Holiday">Special Holiday</option>
+      </select>
+      <button onclick="addShift()">Submit Shift</button>
+      <div id="message" class="message"></div>
+    </section>
     
-    <form id="settingsForm">
-      <label for="dailyRate">Daily Rate:</label>
-      <input type="number" id="dailyRate" min="0" step="0.01" required>
-      
-      <label for="overTimeRate">Overtime Rate per hour:</label>
-      <input type="number" id="overTimeRate" min="0" step="0.01" required>
-      
-      <label for="firstCutoff">First Cut-off Date:</label>
-      <input type="date" id="firstCutoff" required>
-      
-      <label for="secondCutoff">Second Cut-off Date:</label>
-      <input type="date" id="secondCutoff" required>
-      
-      <button type="submit">Save Settings</button>
-    </form>
+    <section>
+      <h2>Saved Shifts</h2>
+      <div id="shiftList"></div>
+    </section>
+    
+    <section>
+      <h2>Delete Shifts</h2>
+      <label>Select Month:</label>
+      <input type="month" id="deleteMonth" />
+      <button onclick="deleteByMonth()">Delete Shifts</button>
+      <hr style="margin: 15px 0" />
+      <button style="background: red" onclick="deleteAllShifts()">
+        Delete All Shifts
+      </button>
+    </section>
   </main>
   
-  <script src="js/settings.js"></script>
+  
+  <script src="js/add-shift.js"></script>
 </body>
 
 </html>

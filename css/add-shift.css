@@ -87,7 +87,7 @@ header.sub-header {
   font-weight: bold;
   font-size: 0.8em;
   cursor: pointer;
-  transition: color 0.3s, transform 0.2s;
+  transition: color var(--transition), transform var(--transition);
   width: auto;
   height: auto;
   margin: 0;
@@ -122,7 +122,7 @@ nav a {
   font-weight: bold;
   padding: 10px 16px;
   border-radius: 20px;
-  transition: background 0.3s, color 0.3s;
+  transition: background var(--transition), color var(--transition);
   margin: 5px 10px;
 }
 
@@ -146,23 +146,24 @@ nav a ion-icon {
   display: inline-block;
   justify-content: center;
   width: auto !important;
-  gap: 10px;
+  gap: 10px; 
 }
 
 main {
   max-width: 480px;
   width: 95%;
-  margin: 20px auto;
+  margin: 10px auto;
   background: var(--surface-alt);
   padding: 25px 20px;
   border-radius: var(--radius-large);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: margin-top 0.8s ease;
 }
 
 h2 {
   text-align: center;
+  font-size: 1.3em;
   color: var(--primary-dark);
-  font-size: 1.5em;
   margin-bottom: 25px;
 }
 
@@ -175,45 +176,177 @@ label {
 }
 
 input[type="date"],
-input[type="number"] {
+input[type="number"],
+input[type="month"],
+select {
   width: 100%;
-  padding: 14px;
+  padding: 10px;
   margin-top: 6px;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   border-radius: var(--radius-small);
   font-size: 1em;
   color: var(--text-primary);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition), color var(--transition);
 }
 
-input:hover {
+input:hover,
+select:hover {
   background: #edf3fb;
 }
 
-input:focus {
+input:focus,
+select:focus {
   border-color: var(--primary);
+  background: #ffffff;
   box-shadow: 0 0 8px rgba(21, 101, 192, 0.3);
   outline: none;
 }
 
 button {
-  margin-top: 25px;
+  margin-top: 20px;
   padding: 10px;
   background: var(--primary);
   border: none;
   border-radius: var(--radius-medium);
-  color: white;
-  font-size: 1.1em;
+  color: #fff;
+  font-size: 1em;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: background var(--transition), transform var(--transition);
   width: 100%;
 }
 
 button:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
+}
+
+section {
+  margin-bottom: 25px;
+}
+
+.shift-group {
+  background: #e3f2fd;
+  padding: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: background var(--transition);
+}
+
+.shift-group:hover {
+  background: #bbdefb;
+}
+
+.shift-group .arrow {
+  transition: transform var(--transition);
+  display: inline-block;
+}
+
+.shift-group.open .arrow {
+  transform: rotate(90deg);
+}
+
+#shiftList {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.shift-list {
+  margin-left: 15px;
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.shift-list.show {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.shift-item {
+  background: #fafafa;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shift-item span {
+  flex: 1;
+}
+
+.shift-item button {
+  margin-left: 5px;
+  padding: 6px 12px;
+  font-size: 0.9em;
+  border-radius: 12px;
+  border: none;
+  background: #607d8b;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.shift-item button:hover {
+  background: #ccc;
+  color: #000;
+}
+
+.shift-item button.delete {
+  background: red;
+  color: white;
+}
+
+.shift-item button.delete:hover {
+  background: darkred;
+}
+
+.message {
+  margin-top: 15px;
+  text-align: center;
+  color: green;
+  font-weight: bold;
+  font-size: 1em;
+  transition: opacity 0.5s;
+  opacity: 0;
+}
+
+/* Scrollbar */
+#shiftList::-webkit-scrollbar,
+.shift-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#shiftList::-webkit-scrollbar-track,
+.shift-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#shiftList::-webkit-scrollbar-thumb,
+.shift-list::-webkit-scrollbar-thumb {
+  background: #90caf9;
+  border-radius: 10px;
+}
+
+#shiftList::-webkit-scrollbar-thumb:hover,
+.shift-list::-webkit-scrollbar-thumb:hover {
+  background: #1565c0;
+}
+
+
+#shiftList,
+.shift-list {
+  scrollbar-width: thin;
+  scrollbar-color: #cccc #f1f1f1;
 }
 
 /* Responsive */
@@ -270,9 +403,19 @@ button:hover {
   
   input[type="date"],
   input[type="number"],
+  input[type="month"],
+  select,
   button {
     font-size: 1em;
     padding: 14px 18px;
+  }
+  
+  section {
+    margin-bottom: 30px;
+  }
+  
+  #shiftList {
+    max-height: 500px;
   }
 }
 
@@ -294,7 +437,8 @@ button:hover {
   }
   
   input,
-  button {
+  button,
+  select {
     padding: 12px;
     font-size: 1em;
   }
