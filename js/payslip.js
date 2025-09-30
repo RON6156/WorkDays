@@ -88,69 +88,67 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalWorkedHours = 0;
 
     shiftsInPeriod.forEach(shift => {
-    const hours = parseFloat(shift.hours || 0);
-    const ot = Math.max(0, hours - 8);
-    totalWorkedHours += hours;
+      const hours = parseFloat(shift.hours || 0);
+      const ot = Math.max(0, hours - 8);
+      totalWorkedHours += hours;
 
-    if (shift.type === "Legal Holiday") {
+      const dayEquivalent = hours > 0 ? Math.min(hours / 8, 1) : 0;
+
+      if (shift.type === "Legal Holiday") {
         if (hours > 0) {
-            
-            legalHolidayDays += 1;
-            legalHolidayOT += ot;
+          legalHolidayDays += dayEquivalent;
+          legalHolidayOT += ot;
         } else {
-            
-            legalHolidayDays += 1; 
-            shift.legalHolidayZeroHours = true;
+          legalHolidayDays += 1;
+          shift.legalHolidayZeroHours = true;
         }
-    } else if (shift.type === "Special Holiday") {
+      } else if (shift.type === "Special Holiday") {
         if (hours > 0) {
-            
-            specialHolidayDays += 1;
-            specialHolidayOT += ot;
+          specialHolidayDays += dayEquivalent;
+          specialHolidayOT += ot;
         } else {
-            
-            specialHolidayDays += 1;
-            shift.specialHolidayZeroHours = true;
+          specialHolidayDays += 1; 
+          shift.specialHolidayZeroHours = true;
         }
-    } else {
+      } else {
         if (hours > 0) {
-            regularDays += 1;
-            regularOTHours += ot;
+          regularDays += dayEquivalent;
+          regularOTHours += ot;
         }
-    }
-});
+      }
+    });
 
 
-const regularPay = regularDays * dailyRate;
-const regularOTPay = regularOTHours * overtimeRate;
+    const regularPay = regularDays * dailyRate;
+    const regularOTPay = regularOTHours * overtimeRate;
 
 
-let LHPay = 0, LHOTPay = 0;
-shiftsInPeriod.forEach(shift => {
-    if (shift.type === "Legal Holiday") {
+    let LHPay = 0, LHOTPay = 0;
+    shiftsInPeriod.forEach(shift => {
+      if (shift.type === "Legal Holiday") {
         if (shift.hours > 0) {
-            LHPay += dailyRate * 2; 
-            LHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 2;
+          LHPay += dailyRate * 2;
+          LHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 2;
         } else {
-            LHPay += dailyRate * 1; 
+          LHPay += dailyRate * 1;
         }
-    }
-});
+      }
+    });
 
 
-let SHPay = 0, SHOTPay = 0;
-shiftsInPeriod.forEach(shift => {
-    if (shift.type === "Special Holiday") {
+    let SHPay = 0, SHOTPay = 0;
+    shiftsInPeriod.forEach(shift => {
+      if (shift.type === "Special Holiday") {
         if (shift.hours > 0) {
-            SHPay += dailyRate * 1.3; 
-            SHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 1.3;
+          SHPay += dailyRate * 1.3;
+          SHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 1.3;
         } else {
-            SHPay += dailyRate * 0.3;
+          SHPay += dailyRate * 0.3;
         }
-    }
-});
+      }
+    });
 
-const grossPay = regularPay + regularOTPay + LHPay + LHOTPay + SHPay + SHOTPay;
+    const grossPay = regularPay + regularOTPay + LHPay + LHOTPay + SHPay + SHOTPay;
 
     const formatValue = val => "₱" + val.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
