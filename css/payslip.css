@@ -93,6 +93,10 @@ header.sub-header {
   margin: 0;
 }
 
+#logoutBtn #logout-icon {
+  font-size: 1.5em;
+}
+
 #logoutBtn:hover {
   color: red;
   transform: scale(1.05);
@@ -138,6 +142,13 @@ nav a ion-icon {
   font-size: 1.2em;
 }
 
+.swal2-actions button {
+  display: inline-block;
+  justify-content: center;
+  width: auto !important;
+  gap: 10px;
+}
+
 main {
   max-width: 480px;
   width: 95%;
@@ -151,14 +162,14 @@ main {
 
 h2 {
   text-align: center;
-  font-size: 1.3em;
+  font-size: 1.5em;
   color: var(--primary-dark);
   margin-bottom: 25px;
 }
 
 button {
   margin-top: 25px;
-  padding: 14px;
+  padding: 10px;
   background: var(--primary);
   border: none;
   border-radius: 20px;
