@@ -7,8 +7,7 @@
   <title>WorkDays</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-                                                                                                                          rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <style>
     :root {
@@ -32,7 +31,6 @@
       align-items: center;
       min-height: 100vh;
     }
-    
     
     body.admin-mode {
       background: #0d0d0d;
@@ -62,7 +60,6 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      
     }
     
     #admin-btn:hover {
@@ -71,7 +68,6 @@
       color: #00ff99;
       transition: 0.3s ease;
     }
-    
     
     main.login-container {
       background: white;
@@ -133,6 +129,23 @@
       transform: translateY(-2px);
     }
     
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .remember {
+      font-size: 0.9em;
+      color: var(--text);
+    }
+    
+    #btn-signup {
+      background: transparent;
+      border: solid var(--primary-dark);
+      color: var(--primary-dark);
+    }
+    
     @media (max-width: 400px) {
       main.login-container {
         padding: 20px 15px;
@@ -153,53 +166,72 @@
     <header>WorkDays</header>
     <input type="email" id="email" placeholder="Enter your email" autocomplete="username" required />
     <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required />
-    
+
+    <!-- Remember Me Checkbox -->
+    <div class="checkbox">
+      <input type="checkbox" id="rememberMe" />
+      <label class="remember" for="rememberMe">Remember Me</label>
+    </div>
+
     <div class="btn-group">
       <button id="btn-login" onclick="login()">Login</button>
       <button id="btn-signup" onclick="signup()">Sign Up</button>
     </div>
   </main>
-  
+
   <!-- Hidden admin login button -->
   <button id="admin-btn" onclick="goToAdminLogin()">Admin</button>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    const rememberMeCheckbox = document.getElementById("rememberMe");
+
+    // Auto-login if user remembered and within 3 days
+    const remembered = JSON.parse(localStorage.getItem("rememberMe")) || null;
+    if (remembered) {
+      const lastLogin = new Date(remembered.timestamp);
+      const now = new Date();
+      const diffDays = (now - lastLogin) / (1000 * 60 * 60 * 24);
+
+      if (diffDays <= 3) {
+        sessionStorage.setItem("currentUserEmail", remembered.email);
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 500);
+      } else {
+        localStorage.removeItem("rememberMe");
+      }
+    }
+
     let clickCount = 0;
     let clickTimer;
 
     document.body.addEventListener("click", () => {
-        clickCount++;
-        if (clickCount === 5) {
-            document.querySelector(".login-container").style.display = "none";
-            
-            document.body.classList.add("admin-mode");
-          
-            document.getElementById("admin-btn").style.display = "inline-block";
-            
-            Swal.fire({
-              icon: 'info',
-              title: 'Admin login revealed!',
-              timer: 2000,
-              showConfirmButton: false
-            });
-            clickCount = 0;
-            clearTimeout(clickTimer);
-        }
+      clickCount++;
+      if (clickCount === 5) {
+        document.querySelector(".login-container").style.display = "none";
+        document.body.classList.add("admin-mode");
+        document.getElementById("admin-btn").style.display = "inline-block";
+        Swal.fire({
+          icon: 'info',
+          title: 'Admin login revealed!',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        clickCount = 0;
         clearTimeout(clickTimer);
-        clickTimer = setTimeout(() => (clickCount = 0), 1000);
+      }
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => (clickCount = 0), 1000);
     });
 
     function goToAdminLogin() {
-        window.location.href = "admin-login.html";
+      window.location.href = "admin-login.html";
     }
 
-    // Toast function
     function showToast(msg, type = 'success') {
       let bg;
-      switch(type){
+      switch (type) {
         case 'success': bg = '#4caf50'; break;
-        case 'error': bg = '#c62828'; break;  
+        case 'error': bg = '#c62828'; break;
         default: bg = '#1565c0';
       }
 
@@ -218,7 +250,6 @@
       });
     }
 
-    // Store users as array of objects
     function getUsers() {
       return JSON.parse(localStorage.getItem('accounts') || '[]');
     }
@@ -255,6 +286,17 @@
 
       if (user) {
         sessionStorage.setItem('currentUserEmail', email);
+
+        // Remember Me logic
+        if (rememberMeCheckbox.checked) {
+          localStorage.setItem("rememberMe", JSON.stringify({
+            email: email,
+            timestamp: new Date().toISOString()
+          }));
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
         showToast('Login successful!', 'success');
         clearFields();
         setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);

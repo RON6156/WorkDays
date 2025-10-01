@@ -1,7 +1,6 @@
 const menu = document.getElementById("menu");
 const menuIcon = document.getElementById("menu-icon");
 const mainContent = document.getElementById("mainContent");
-const body = document.body;
 
 function toggleMenu() {
   const isOpen = menu.classList.contains("show");
@@ -25,12 +24,10 @@ if (!currentUserEmail) {
     icon: 'error',
     title: 'Not logged in',
     confirmButtonText: 'OK'
-  }).then(() => {
-    window.location.href = "index.html";
-  });
+  }).then(() => window.location.href = "index.html");
 }
 
-
+// Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
   Swal.fire({
     icon: 'warning',
@@ -42,11 +39,8 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   }).then(result => {
     if (result.isConfirmed) {
       sessionStorage.removeItem("currentUserEmail");
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged Out',
-        confirmButtonText: 'OK'
-      }).then(() => { window.location.href = "index.html"; });
+      Swal.fire({ icon: 'success', title: 'Logged Out', confirmButtonText: 'OK' })
+        .then(() => { window.location.href = "index.html"; });
     }
   });
 });
@@ -56,19 +50,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const payslipContent = document.getElementById("payslipContent");
   const payslipOutput = document.getElementById("payslipOutput");
 
+  // Load current and increase rates
+  let dailyRate = parseFloat(localStorage.getItem("dailyRate")) || 0;
+  let overtimeRate = parseFloat(localStorage.getItem("overTimeRate")) || 0;
+  const newDailyRate = parseFloat(localStorage.getItem("newDailyRate")) || null;
+  const newOverTimeRate = parseFloat(localStorage.getItem("newOverTimeRate")) || null;
+  const increaseStart = localStorage.getItem("increaseStartDate") || null;
+
+  // Apply increased rates automatically if start date reached
+  if (newDailyRate && newOverTimeRate && increaseStart) {
+    const today = new Date().setHours(0,0,0,0);
+    const start = new Date(increaseStart).setHours(0,0,0,0);
+    if (today >= start) {
+      localStorage.setItem("dailyRate", newDailyRate);
+      localStorage.setItem("overTimeRate", newOverTimeRate);
+      dailyRate = newDailyRate;
+      overtimeRate = newOverTimeRate;
+
+      localStorage.removeItem("newDailyRate");
+      localStorage.removeItem("newOverTimeRate");
+      localStorage.removeItem("increaseStartDate");
+
+      // Session flag for dashboard notification
+      sessionStorage.setItem("rateIncreased", JSON.stringify({ dailyRate, overtimeRate }));
+    }
+  }
+
   generateBtn.addEventListener("click", () => {
-    const dailyRate = parseFloat(localStorage.getItem("dailyRate")) || 0;
-    const overtimeRate = parseFloat(localStorage.getItem("overTimeRate")) || 0;
     const firstCutoff = localStorage.getItem("firstCutoff");
     const secondCutoff = localStorage.getItem("secondCutoff");
 
     if (!firstCutoff || !secondCutoff) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing Cut-off Dates',
-        text: 'Please set cut-off dates in Settings first.',
-        confirmButtonText: 'OK'
-      });
+      Swal.fire({ icon: 'error', title: 'Missing Cut-off Dates', text: 'Set cut-off dates in Settings first.', confirmButtonText: 'OK' });
       return;
     }
 
@@ -91,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const hours = parseFloat(shift.hours || 0);
       const ot = Math.max(0, hours - 8);
       totalWorkedHours += hours;
-
       const dayEquivalent = hours > 0 ? Math.min(hours / 8, 1) : 0;
 
       if (shift.type === "Legal Holiday") {
@@ -100,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
           legalHolidayOT += ot;
         } else {
           legalHolidayDays += 1;
-          shift.legalHolidayZeroHours = true;
         }
       } else if (shift.type === "Special Holiday") {
         if (hours > 0) {
@@ -108,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
           specialHolidayOT += ot;
         } else {
           specialHolidayDays += 1; 
-          shift.specialHolidayZeroHours = true;
         }
       } else {
         if (hours > 0) {
@@ -118,33 +128,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-
     const regularPay = regularDays * dailyRate;
     const regularOTPay = regularOTHours * overtimeRate;
 
-
     let LHPay = 0, LHOTPay = 0;
     shiftsInPeriod.forEach(shift => {
-      if (shift.type === "Legal Holiday") {
-        if (shift.hours > 0) {
-          LHPay += dailyRate * 2;
-          LHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 2;
-        } else {
-          LHPay += dailyRate * 1;
-        }
+      if (shift.type === "Legal Holiday" && shift.hours > 0) {
+        LHPay += dailyRate * 2;
+        LHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 2;
       }
     });
 
-
     let SHPay = 0, SHOTPay = 0;
     shiftsInPeriod.forEach(shift => {
-      if (shift.type === "Special Holiday") {
-        if (shift.hours > 0) {
-          SHPay += dailyRate * 1.3;
-          SHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 1.3;
-        } else {
-          SHPay += dailyRate * 0.3;
-        }
+      if (shift.type === "Special Holiday" && shift.hours > 0) {
+        SHPay += dailyRate * 1.3;
+        SHOTPay += Math.max(0, shift.hours - 8) * overtimeRate * 1.3;
       }
     });
 
@@ -152,10 +151,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formatValue = val => "₱" + val.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+    // Display Rate increase in payslip if exists
+    let rateInfo = `Rate/Day: ${formatValue(dailyRate)}\nOvertime Rate/Hour: ${formatValue(overtimeRate)}`;
+    if (newDailyRate && newOverTimeRate && increaseStart) {
+      rateInfo = `Rate/Day: ${formatValue(dailyRate)} → ${formatValue(newDailyRate)}
+Overtime Rate/Hour: ${formatValue(overtimeRate)} → ${formatValue(newOverTimeRate)}
+Increase Start: ${increaseStart}`;
+    }
+
     payslipContent.textContent = `
 Period: ${firstCutoff} to ${secondCutoff}
-Rate/Day: ${dailyRate ? "₱" + dailyRate.toFixed(2) : "-"}
-Overtime Rate/Hour: ${overtimeRate ? "₱" + overtimeRate.toFixed(2) : "-"}
+${rateInfo}
 ______________________________________
 
 Regular Day       : ${regularDays}  — ${formatValue(regularPay)}
@@ -168,7 +174,6 @@ Legal Holiday OT  : ${legalHolidayOT.toFixed(1)} — ${formatValue(LHOTPay)}
 Special Holiday Pay: ${specialHolidayDays} — ${formatValue(SHPay)}
 Special Holiday OT : ${specialHolidayOT.toFixed(1)} — ${formatValue(SHOTPay)}
 
-___________________
 ___________________
 Gross Pay: ${formatValue(grossPay)}
 `;

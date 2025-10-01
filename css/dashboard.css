@@ -58,6 +58,8 @@ header.sub-header {
   align-items: center;
 }
 
+
+
 /* Hamburger */
 .hamburger {
   font-size: 28px;
@@ -144,6 +146,17 @@ nav a ion-icon {
   margin-right: 8px;
   font-size: 1.2em;
 }
+
+
+
+/* Simple fade in/out animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(20px); }
+}
+
 
 .swal2-actions button {
   display: inline-block;
