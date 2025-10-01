@@ -1,7 +1,7 @@
 # WorkDays App
 ![GitHub release](https://img.shields.io/github/v/release/RON6156/WorkDays?logo=github&logoColor=white)
 
-[![Netlify Verified](https://img.shields.io/badge/Netlify-Verified-00C7B7?logo=netlify&logoColor=white)](https://workdays-app.netlify.app)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/08231d0f-1d01-412b-a10e-546ddaec225c/deploy-status)](workdays-app.netlify.app)
 
 ![HTML5](https://img.shields.io/badge/HTML5-%23E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-%231572B6?logo=css3&logoColor=white)
@@ -18,6 +18,14 @@ A simple client-side web app to **track work shifts and generate payslips** usin
 
 -   Add, edit, and delete work shifts.
 -   Set **Daily Rate**, **Overtime Rate**, and **Cut-off Dates**.
+
+### Salary Increase Function
+-   Schedule a future **Daily Rate** and **Overtime Rate** increase.  
+-   Enter an **Effective Date** (automatically applies new rates on that day).  
+-   Old rates are replaced once the effective date is reached.  
+-   Transparent close button to hide/show increase fields.  
+
+
 -   Generate payslip showing:
     -   Regular days and overtime.
     -   Holiday pay (Legal & Special).
@@ -29,9 +37,9 @@ A simple client-side web app to **track work shifts and generate payslips** usin
 
 ## Tech Stack
 
--   HTML, CSS, JavaScript
--   SweetAlert2
--   LocalStorage & SessionStorage
+-   HTML, CSS, JavaScript  
+-   SweetAlert2  
+-   LocalStorage & SessionStorage  
 
 ---
 
@@ -43,15 +51,15 @@ A simple client-side web app to **track work shifts and generate payslips** usin
 
 ## How to Use
 
-1. Open **Settings** → Set your rates and cutoff dates.
-2. Go to **Dashboard** → Add your shifts.
-3. Open **Payslip** → Click **Generate Payslip**.
+1. Open **Settings** → Set your rates, cutoff dates, and optional **future rate increase**.  
+2. Go to **Dashboard** → Add your shifts.  
+3. Open **Payslip** → Click **Generate Payslip**.  
 
 ---
 
 ## Notes
 
--   No backend – for **personal use or demo only**.
--   All data is saved in the browser.
+-   No backend – for **personal use only**.  
+-   All data is saved in the browser/**LocalStorage**.  
 
 ---
