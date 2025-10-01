@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
                                                                                                                           rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <link rel="stylesheet" href="css/settings.css">
@@ -29,25 +28,15 @@
       <ion-icon id="logout-icon" name="exit-outline"></ion-icon>
     </button>
   </header>
-  <!-- Slide-down menu -->
   <nav id="menu">
-    <a href="dashboard.html">
-      <ion-icon name="grid-outline"></ion-icon> Dashboard
-    </a>
-    <a href="add-shift.html">
-      <ion-icon name="duplicate-outline"></ion-icon> Add Shift
-    </a>
-    <a href="settings.html" class="active">
-      <ion-icon name="settings-outline"></ion-icon> Settings
-    </a>
-    <a href="payslip.html">
-      <ion-icon name="document-text-outline"></ion-icon> Payslip
-    </a>
+    <a href="dashboard.html"><ion-icon name="grid-outline"></ion-icon> Dashboard</a>
+    <a href="add-shift.html"><ion-icon name="duplicate-outline"></ion-icon> Add Shift</a>
+    <a href="settings.html" class="active"><ion-icon name="settings-outline"></ion-icon> Settings</a>
+    <a href="payslip.html"><ion-icon name="document-text-outline"></ion-icon> Payslip</a>
   </nav>
   
   <main id="mainContent">
     <h2>Settings</h2>
-    
     <form id="settingsForm">
       <label for="dailyRate">Daily Rate:</label>
       <input type="number" id="dailyRate" min="0" step="0.01" required>
@@ -55,11 +44,26 @@
       <label for="overTimeRate">Overtime Rate per hour:</label>
       <input type="number" id="overTimeRate" min="0" step="0.01" required>
       
+              <span class="toggle-link" type="button" id="toggleIncrease" sty>Salary Increase?</span>
+      
+            <div style="margin-top: 20px;">
+        <div id="increaseFields">
+          <label for="newDailyRate">New Daily Rate:</label>
+          <input type="number" id="newDailyRate" min="0" step="0.01">
+          
+          <label for="newOverTimeRate">New Overtime Rate:</label>
+          <input type="number" id="newOverTimeRate" min="0" step="0.01">
+          
+          <label for="increaseStartDate">Start Date:</label>
+          <input type="date" id="increaseStartDate">
+        </div>
+      
       <label for="firstCutoff">First Cut-off Date:</label>
       <input type="date" id="firstCutoff" required>
       
       <label for="secondCutoff">Second Cut-off Date:</label>
       <input type="date" id="secondCutoff" required>
+      </div>
       
       <button type="submit">Save Settings</button>
     </form>

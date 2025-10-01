@@ -5,27 +5,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WorkDays</title>
-
+  
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+                                                                                                                          rel="stylesheet" />
+  
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  
   <!-- Ionicons -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
+  
   <!-- Styles -->
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
+  
   <!-- Main Header -->
   <header class="main-header">WorkDays</header>
-
+  
   <!-- Sub Header -->
   <header class="sub-header">
     <div class="sub-header-left">
@@ -38,7 +40,7 @@
       <ion-icon id="logout-icon" name="exit-outline"></ion-icon>
     </button>
   </header>
-
+  
   <!-- Slide-down Menu -->
   <nav id="menu">
     <a href="dashboard.html" class="active">
@@ -54,17 +56,17 @@
       <ion-icon name="document-text-outline"></ion-icon> Payslip
     </a>
   </nav>
-
+  
   <!-- Main Content -->
   <main id="mainContent">
-   <div class="card">
-    <h1>Overview</h1>
-     <div class="textbox">
-               <h3 id="cutoffDisplay">Period: -</h3>
-     </div>
-   </div>
+    <div class="card">
+      <h1>Overview</h1>
+      <div class="textbox">
+        <h3 id="cutoffDisplay">Period: -</h3>
+      </div>
+    </div>
     
-
+    
     <div class="overview-grid">
       <div class="card">
         <h2>Regular Days</h2>
@@ -82,11 +84,11 @@
         <h2>Legal Holidays</h2>
         <p id="legalHolidayCount">0</p>
       </div>
-            <div class="card">
+      <div class="card">
         <h2>Special Holidays</h2>
         <p id="specialHolidayCount">0</p>
       </div>
-            <div class="card">
+      <div class="card">
         <h2>Legal Holiday OT</h2>
         <p id="legalHolidayOT">0</p>
       </div>
@@ -95,15 +97,13 @@
         <p id="specialHolidayOT">0</p>
       </div>
     </div>
-          <!-- Pie Chart Container -->
+    <!-- Pie Chart Container -->
     <div class="chart-container">
       <canvas id="workPieChart"></canvas>
     </div>
     
   </main>
 
-  <!-- Scripts -->
-  <!-- Chart.js must be loaded before dashboard.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

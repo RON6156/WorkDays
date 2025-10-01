@@ -216,6 +216,32 @@ button:hover {
   transform: translateY(-2px);
 }
 
+.toggle-link {
+  color: var(--primary);
+  font-size: 0.9em;
+  cursor: pointer;
+  margin-top: 10px;
+  display: inline-block;
+  transition: color 0.3s;
+}
+
+.toggle-link:hover {
+  color: var(--primary-dark);
+}
+
+.line {
+  margin-top: 20px;
+}
+
+#increaseFields {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  padding: 0;
+  margin-top: 10px;
+}
+
+
 /* Responsive */
 @media (min-width: 1024px) {
   header.main-header {

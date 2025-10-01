@@ -5,6 +5,60 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
   const cutoffDisplay = document.getElementById("cutoffDisplay");
 
+
+  const newDailyRate = localStorage.getItem("newDailyRate");
+  const newOverTimeRate = localStorage.getItem("newOverTimeRate");
+  const increaseStart = localStorage.getItem("increaseStartDate");
+  const acknowledgedDate = localStorage.getItem("acknowledgedDate");
+
+  if (newDailyRate && newOverTimeRate && increaseStart) {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const start = new Date(increaseStart).setHours(0, 0, 0, 0);
+
+    if (today >= start && acknowledgedDate !== increaseStart) {
+      const formattedStartDate = new Date(increaseStart).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+      Swal.fire({
+        icon: "warning",
+        title: "New Rates",
+        html: `
+        <div style="text-align: left; font-size: 16px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Effective Date:</span> <span><i>${formattedStartDate}</i></span>
+          </div>
+          <div style="margin-top: 12px;"></div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Daily Rate:</span> <span>${parseFloat(newDailyRate).toFixed(2)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Overtime Rate:</span> <span>${parseFloat(newOverTimeRate).toFixed(2)}</span>
+          </div>
+        </div>
+      `,
+        confirmButtonText: "OK"
+      }).then(() => {
+        // Apply new rates
+        localStorage.setItem("dailyRate", newDailyRate);
+        localStorage.setItem("overTimeRate", newOverTimeRate);
+
+        // Clear scheduled increase
+        localStorage.removeItem("newDailyRate");
+        localStorage.removeItem("newOverTimeRate");
+        localStorage.removeItem("increaseStartDate");
+
+        // Remember acknowledgment to not show modal again until new date is set
+        localStorage.setItem("acknowledgedDate", increaseStart);
+      });
+    }
+  }
+
+
+
+
   // Cards
   const daysWorkedEl = document.getElementById("daysWorked");
   const hoursWorkedEl = document.getElementById("hoursWorked");
@@ -27,27 +81,28 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-// Logout button
-logoutBtn.addEventListener("click", () => {
-  Swal.fire({
-    icon: "warning",
-    title: "Log Out?",
-    text: "Are you sure you want to log out?",
-    showCancelButton: true,
-    confirmButtonText: "Yes",
-    cancelButtonText: "Cancel"
-  }).then(r => {
-    if (r.isConfirmed) {
-      sessionStorage.removeItem("currentUserEmail");
-      Swal.fire({
-        icon: "success",
-        title: "Logged Out"
-      }).then(() => {
-        window.location.href = "index.html";
-      });
-    }
+  // Logout button
+  logoutBtn.addEventListener("click", () => {
+    Swal.fire({
+      icon: "warning",
+      title: "Log Out?",
+      text: "Are you sure you want to log out?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel"
+    }).then(r => {
+      if (r.isConfirmed) {
+        sessionStorage.removeItem("currentUserEmail");
+        localStorage.removeItem("rememberMe");
+        Swal.fire({
+          icon: "success",
+          title: "Logged Out"
+        }).then(() => {
+          window.location.href = "index.html";
+        });
+      }
+    });
   });
-});
 
 
 
@@ -82,37 +137,37 @@ logoutBtn.addEventListener("click", () => {
   let specialHolidayDays = 0, specialHolidayOT = 0;
   let totalWorkedHours = 0;
 
-shiftsInPeriod.forEach(shift => {
-  const hours = parseFloat(shift.hours || 0);
-  const ot = Math.max(0, hours - 8);
-  totalWorkedHours += hours;
+  shiftsInPeriod.forEach(shift => {
+    const hours = parseFloat(shift.hours || 0);
+    const ot = Math.max(0, hours - 8);
+    totalWorkedHours += hours;
 
-  
-  const dayEquivalent = hours > 0 ? Math.min(hours / 8, 1) : 0;
 
-  if (shift.type === "Legal Holiday") {
+    const dayEquivalent = hours > 0 ? Math.min(hours / 8, 1) : 0;
+
+    if (shift.type === "Legal Holiday") {
       if (hours > 0) {
-          legalHolidayDays += dayEquivalent;
-          legalHolidayOT += ot;
+        legalHolidayDays += dayEquivalent;
+        legalHolidayOT += ot;
       } else {
-          legalHolidayDays += 1;
-          shift.legalHolidayZeroHours = true;
+        legalHolidayDays += 1;
+        shift.legalHolidayZeroHours = true;
       }
-  } else if (shift.type === "Special Holiday") {
+    } else if (shift.type === "Special Holiday") {
       if (hours > 0) {
-          specialHolidayDays += dayEquivalent;
-          specialHolidayOT += ot;
+        specialHolidayDays += dayEquivalent;
+        specialHolidayOT += ot;
       } else {
-          specialHolidayDays += 1;
-          shift.specialHolidayZeroHours = true;
+        specialHolidayDays += 1;
+        shift.specialHolidayZeroHours = true;
       }
-  } else {
+    } else {
       if (hours > 0) {
-          regularDays += dayEquivalent;
-          regularOTHours += ot;
+        regularDays += dayEquivalent;
+        regularOTHours += ot;
       }
-  }
-});
+    }
+  });
 
 
   // Display results
