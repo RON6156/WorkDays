@@ -23,15 +23,13 @@ A simple client-side web app to **track work shifts and generate payslips** usin
 -   Schedule a future **Daily Rate** and **Overtime Rate** increase.  
 -   Enter an **Effective Date** (automatically applies new rates on that day).  
 -   Old rates are replaced once the effective date is reached.  
--   Transparent close button to hide/show increase fields.  
 
 
 -   Generate payslip showing:
     -   Regular days and overtime.
     -   Holiday pay (Legal & Special).
     -   Gross pay.
--   Data stored in **LocalStorage** (settings & shifts).
--   Responsive design and alerts using **SweetAlert2**.
+-   Data stored in **LocalStorage**.
 
 ---
 
@@ -52,8 +50,9 @@ A simple client-side web app to **track work shifts and generate payslips** usin
 ## How to Use
 
 1. Open **Settings** → Set your rates, cutoff dates, and optional **future rate increase**.  
-2. Go to **Dashboard** → Add your shifts.  
-3. Open **Payslip** → Click **Generate Payslip**.  
+2. Go to **Dashboard** →  Overview 
+3. Open **Add Shift** →  Input/Edit/Delete **Shifts**.
+4. Open **Payslip** → Click **Generate Payslip**.  
 
 ---
 
